@@ -1,5 +1,5 @@
 # A* Search Algorithm
-This is a basic A* Search following the Lesson 3 of the 2nd part of Udacity's "Learn C++" course.
+This is a basic A* (star) Search following the Lesson 3 of the 2nd part of Udacity's "Learn C++" course.
 
 More info ---> https://en.wikipedia.org/wiki/A*_search_algorithm
 
