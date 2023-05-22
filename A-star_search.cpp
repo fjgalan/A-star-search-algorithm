@@ -17,10 +17,8 @@ using std::vector;
 
 enum class State {kEmpty, kObstacle, kClosed, kPath, kStart, kFinish};
 
-// directional deltas
 const int delta[4][2]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
-// Coge lo que hay en el archivo 1.board y los números los mete en "num" y las comas en "coma"
 vector<State> Parseline(string s) {
     istringstream stream(s);
     vector<State> row;
@@ -40,7 +38,6 @@ vector<State> Parseline(string s) {
     return row;
 }
 
-// Lee los datos del tablero del archivo 1.board
 vector<vector<State>> ReadBoardFile(string path) {
     ifstream file;
     string line;
@@ -63,12 +60,10 @@ bool Compare(const vector<int> a, const vector<int> b) {
     return f1 > f2; 
 }
 
-// Sort the two-dimensional vector of ints in descending order.
 void CellSort(vector<vector<int>> *v) {
   sort(v->begin(), v->end(), Compare);
 }
 
-// Heuristic function
 int Heuristic (int x1, int y1, int x2, int y2) {
     return abs(x2 - x1) + abs(y2 - y1);
 }
@@ -93,12 +88,10 @@ void ExpandNeighbors(vector<int> &current_node, vector<vector<int>> &open, vecto
     int y = current_node[1];
     int g = current_node[2];
 
-    // Loop through current node's potential neighbors.
     for (int i = 0; i < 4; i++) {
         int x2 = x + delta[i][0];
         int y2 = y + delta[i][1];
 
-        // Check that the potential neighbor's x2 and y2 values are on the grid and not closed.
         if (CheckValidCell(x2, y2, grid)) {
             // Increment g value and add neighbor to open list.
             int g2 = g + 1;
@@ -108,8 +101,6 @@ void ExpandNeighbors(vector<int> &current_node, vector<vector<int>> &open, vecto
     }
 }
 
-// Dos arrays de longitud 2
-// Implementation of A* search algorithm
 vector<vector<State>> Search(vector<vector<State>> grid, int init[2], int goal[2]) {
     vector<vector<int>> open {};
     int x = init[0], y = init[1];
@@ -118,28 +109,26 @@ vector<vector<State>> Search(vector<vector<State>> grid, int init[2], int goal[2
 
     AddToOpen(x, y, g, h, open, grid);
 
-    while(open.size() > 0) {            // while open vector is non empty {
-        CellSort(&open);                // Sort the open list using `CellSort`,
-        auto current = open.back();     // and get the current node.
+    while(open.size() > 0) {            
+        CellSort(&open);                
+        auto current = open.back();  
 
         open.pop_back();
-        x = current[0];                 // Get the x and y values from the current node,
+        x = current[0];
         y = current[1];                 
-        grid[x][y] = State::kPath;      // and set grid[x][y] to kPath.
+        grid[x][y] = State::kPath;
 
-        if (x == goal[0] && y == goal[1]) {             // Check if you've reached the goal. If so, return grid.
-            grid[init[0]][init[1]] = State::kStart;     // Set the init grid cell to kStart, and 
-            grid[goal[0]][goal[1]] = State::kFinish;    // set the goal grid cell to kFinish before returning the grid. 
+        if (x == goal[0] && y == goal[1]) {
+            grid[init[0]][init[1]] = State::kStart;
+            grid[goal[0]][goal[1]] = State::kFinish; 
             return grid;
         }
-        // If we're not done, expand search to current node's neighbors.
         ExpandNeighbors(current, open, grid, goal);
     }
     cout << "No path found: the goal landed on an obstacle." << endl;
     return vector<vector<State>> {};
 }
 
-// Para ver qué carácter/emoji usar
 string CellString(State state)
 {
     switch (state) {
@@ -160,7 +149,6 @@ string CellString(State state)
     }
 }
 
-// Printea el tablero
 void PrintBoard(const vector<vector<State>> tablerito) {
     for (int i = 0; i < tablerito.size(); i++) {
         for (int j = 0; j < tablerito[i].size(); j++) {
@@ -171,7 +159,7 @@ void PrintBoard(const vector<vector<State>> tablerito) {
 }
 
 int main() {
-    SetConsoleOutputCP(CP_UTF8); // Esto es para los emojis
+    SetConsoleOutputCP(CP_UTF8);
 
     int init[2] {0, 0};
     int goal[2];
